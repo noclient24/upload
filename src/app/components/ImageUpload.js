@@ -7,6 +7,8 @@ const ImageUpload = ({ onUploadSuccess }) => {
   const [preview, setPreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -19,8 +21,8 @@ const ImageUpload = ({ onUploadSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
-      setError('Please select a file');
+    if (!file || !userName || !userPhone) {
+      setError('Please fill all fields and select a file');
       return;
     }
 
@@ -30,6 +32,8 @@ const ImageUpload = ({ onUploadSuccess }) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('userName', userName);
+      formData.append('userPhone', userPhone);
 
       const response = await fetch('/api/images/upload', {
         method: 'POST',
@@ -48,6 +52,8 @@ const ImageUpload = ({ onUploadSuccess }) => {
 
       setFile(null);
       setPreview(null);
+      setUserName('');
+      setUserPhone('');
     } catch (err) {
       setError(err.message || 'Error uploading image');
     } finally {
@@ -60,12 +66,35 @@ const ImageUpload = ({ onUploadSuccess }) => {
       <h2 className="text-xl font-bold mb-4">Upload Image</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
+          <label className="block mb-2 font-medium">User Name</label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-2 font-medium">Phone Number</label>
+          <input
+            type="tel"
+            value={userPhone}
+            onChange={(e) => setUserPhone(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
           <label className="block mb-2 font-medium">Select Image</label>
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             className="w-full p-2 border rounded"
+            required
           />
         </div>
         
@@ -84,9 +113,11 @@ const ImageUpload = ({ onUploadSuccess }) => {
 
         <button
           type="submit"
-          disabled={isUploading || !file}
+          disabled={isUploading || !file || !userName || !userPhone}
           className={`px-4 py-2 rounded text-white ${
-            isUploading || !file ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+            isUploading || !file || !userName || !userPhone 
+              ? 'bg-gray-400' 
+              : 'bg-blue-500 hover:bg-blue-600'
           }`}
         >
           {isUploading ? 'Uploading...' : 'Upload Image'}

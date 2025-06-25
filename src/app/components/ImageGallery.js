@@ -33,7 +33,7 @@ const ImageGallery = () => {
         throw new Error('Failed to delete image');
       }
       
-      fetchImages(); // Refresh the list after deletion
+      fetchImages();
     } catch (err) {
       setError(err.message);
     }
@@ -58,13 +58,12 @@ const ImageGallery = () => {
             <div key={image._id} className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow">
               <img
                 src={image.url}
-                alt={`Uploaded ${image.format}`}
+                alt={`Uploaded by ${image.userName}`}
                 className="w-full h-48 object-cover"
               />
               <div className="p-3">
-                <p className="text-sm text-gray-600">
-                  {image.width} × {image.height}px
-                </p>
+                <p className="font-medium">{image.userName}</p>
+                <p className="text-sm text-gray-600">{image.userPhone}</p>
                 <button
                   onClick={() => handleDelete(image._id)}
                   className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"

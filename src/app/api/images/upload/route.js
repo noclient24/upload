@@ -6,7 +6,7 @@ import Image from '@/app/models/Image';
 
 export const config = {
   api: {
-    bodyParser: false, // Disable the default body parser
+    bodyParser: false,
   },
 };
 
@@ -14,36 +14,33 @@ export async function POST(request) {
   await dbConnect();
 
   try {
-    // Get the form data
     const formData = await request.formData();
     const file = formData.get('file');
+    const userName = formData.get('userName');
+    const userPhone = formData.get('userPhone');
 
-    if (!file) {
+    if (!file || !userName || !userPhone) {
       return NextResponse.json(
-        { message: 'No file uploaded' },
+        { message: 'File, user name and phone are required' },
         { status: 400 }
       );
     }
 
     // Convert file to buffer
     const buffer = await file.arrayBuffer();
-    
-    // Convert buffer to base64 string
     const base64String = Buffer.from(buffer).toString('base64');
     const dataUri = `data:${file.type};base64,${base64String}`;
 
-    // Upload to Cloudinary using the base64 string
+    // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(dataUri, {
       folder: 'nextjs-uploads',
     });
 
     // Save to MongoDB
     const image = new Image({
-      public_id: result.public_id,
       url: result.secure_url,
-      width: result.width,
-      height: result.height,
-      format: result.format,
+      userName,
+      userPhone,
     });
 
     await image.save();

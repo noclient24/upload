@@ -1,22 +1,17 @@
 import mongoose from 'mongoose';
 
 const ImageSchema = new mongoose.Schema({
-  public_id: {
-    type: String,
-    required: true,
-  },
   url: {
     type: String,
     required: true,
   },
-  width: {
-    type: Number,
-  },
-  height: {
-    type: Number,
-  },
-  format: {
+  userName: {
     type: String,
+    required: true,
+  },
+  userPhone: {
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Date,
