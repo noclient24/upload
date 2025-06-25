@@ -1,0 +1,4 @@
+CLOUDINARY_CLOUD_NAME="daof8ekzp"
+CLOUDINARY_API_KEY="139769779161575"
+CLOUDINARY_API_SECRET="7OpAfGWsCiyfSDSq1VL3BAMeGzE"
+MONGODB_URI=mongodb+srv://Abdullah:Abdullah@cluster0.igwvzmj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
